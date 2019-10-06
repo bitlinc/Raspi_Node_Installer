@@ -1,2 +1,2 @@
-# Raspi_Node_Installer
-The full repository for the Bitcoin - Electrum node installer 
+# Raspberry Pi Bitcoin - Electrum Personal Server - Electrum Wallet 
+- One click install to complete 
