@@ -1,2 +1,2 @@
-# Raspberry Pi Bitcoin - Electrum Personal Server - Electrum Wallet 
+# Rasp-Pi Bitcoin || Electrum Personal Server || Electrum Wallet 
 - One click install to complete 
