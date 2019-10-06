@@ -1,2 +1,3 @@
-# One click Bitcoin || Electrum Personal Server || Electrum Wallet Installer
-# Mainnet || Testnet run simultaneous
+# One click Bitcoin || Electrum Wallet Installer
+- 
+- mainnet and testnet run simultaneous
