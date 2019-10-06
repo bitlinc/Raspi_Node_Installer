@@ -1,2 +1,2 @@
-# Rasp-Pi Bitcoin || Electrum Personal Server || Electrum Wallet 
-- One click install to complete 
+# One click Bitcoin || Electrum Personal Server || Electrum Wallet Installer
+# Mainnet || Testnet run simultaneous
