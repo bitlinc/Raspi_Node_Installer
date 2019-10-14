@@ -1,4 +1,4 @@
-# One click -> Full Bitcoin Node || Electrum Wallet 
+# One click -> Full Bitcoin Node || Electrum Wallet Install
 # Electrum Wallet Configured ONLY to your Bitcoin Node
 # Bitcoin and Electrum Set to Auto Start On Boot
 # Mainnet & Testnet Run Simultaneously 
