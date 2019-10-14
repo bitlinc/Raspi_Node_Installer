@@ -26,7 +26,7 @@ Step 1:
 
 # Warnings  
 1. You can not run this scrip in a SSH shell as of right now
-2. You must eject the external drive (only on the Raspi) using the application created that is located on your desktop
+2. To eject the external drive (only on the Raspi) use the application 'Eject Drive' that is located on your desktop
 3. 
 
 
