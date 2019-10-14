@@ -1,4 +1,7 @@
-# One click -> Full Bitcoin Node || Electrum Wallet Connecting Only To YOUR Node || Mainnet & Testnet Run Simultaneously
+# One click -> Full Bitcoin Node || Electrum Wallet 
+# Electrum Wallet Configured ONLY to your Bitcoin Node
+# Bitcoin and Electrum Set to Auto Start On Boot
+# Mainnet & Testnet Run Simultaneously 
 
 
 # What is this script and what does it do
