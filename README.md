@@ -22,16 +22,16 @@ This script is designed for the user that has little to no experence with the co
 
 
 # Instructions
-Step 1: Flash your SD Card using https://www.balena.io/etcher/ with the downloaded from step 5 above
-Step 2: Forward your ports as described in the section below - this is NOT DIFFICULT
-Step 3: Go to your Linux or macOS computer where you will download the blockchain (this took about 15 hrs for me)
-Step 4: Download script on your macOS or Linux computer here 
-Step 5: Eject all drives on the computer and plug in your external drive for your Pi - THIS DRIVE WILL BE FORMATTED
-Step 6: Open script - this will create the Bitcoin Installer script on your desktop - this is the installer
-Step 7: Answer on screen questions to setup install of Bitcoin-qt - the blockchain will be on the external drive when finished
+1. Flash your SD Card using https://www.balena.io/etcher/ with the downloaded from step 5 above
+2. Forward your ports as described in the section below - this is NOT DIFFICULT
+3. Go to your Linux or macOS computer where you will download the blockchain (this took about 15 hrs for me)
+4. Download script on your macOS or Linux computer here 
+5. Eject all drives on the computer and plug in your external drive for your Pi - THIS DRIVE WILL BE FORMATTED
+6. Open script - this will create the Bitcoin Installer script on your desktop - this is the installer
+7. Answer on screen questions to setup install of Bitcoin-qt - the blockchain will be on the external drive when finished
    * This is a ~300 GB downloadn when you factor in mainnet and testnet are downloaded - look at the bottom left for countdown
    * Bitcoin mainnet runs first, after it completes (look at the left corner of QT), exit bitcoin so testnet can start (Green)
-Step 8: 
+8. 
 
 # Warnings  
 1. You can not run this scrip in a SSH shell as of right now
