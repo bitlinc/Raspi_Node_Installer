@@ -24,9 +24,10 @@ This script is designed for the user that has little to no experence with the co
 Step 1:  
 
 
-# Warnings 
-1. Because the external drive is formatted as exfat the rasp-pi will take longer then normal to mount the drive   
-2. You can not run this scrip in a SSH shell
+# Warnings  
+1. You can not run this scrip in a SSH shell as of right now
+2. You must eject the external drive (only on the Raspi) using the application created on your desktop
+3. 
 
 
 # Recommeded Reading For All Users 
