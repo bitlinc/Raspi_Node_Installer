@@ -6,7 +6,7 @@
         ## Change root password - create  user 'bitcoin' for daemon services to run under 
         ## Set the visible name your Pi on the network - Set boot to GUI - Expand Filesystem - Set Memory Split to 16
         ## Update system and install necessary software packages [apt-get install htop git curl bash-completion jq dphys-swapfile dirmngr]
-        ## Provision external drive - format with ext4 - edit fstab for mounting the drive to the file system - mount the drive and set owner 
+        ## Provision external drive - format with exFAT - edit fstab for mounting the drive to the file system - mount the drive and set owner 
         ## Create Swap File on external drive to prolong life of the SD card 
         ## Configure Uncomplicated Firewall for Bitcoin - LND - Electrum Personal Server - Electrum Wallet for both mainnet and testnet
         ## Insall fail2ban 
@@ -14,13 +14,12 @@
     ########################################################################################################################################
 
 ## User Functions
-
 # This script will download and install only Bitcoin-QT
 ## The purpose of this script is NOT To create a bitcoin wallet address but to download and install bitcoin just to SYNC the blockchain 
 ########################################################################################################################################
 ########################################################################################################################################  
-
- function download_Bitcoind_Linux {
+## Initial Block Download functions
+function download_Bitcoind_Linux {
         cd /home/"$USERNAME"/Downloads
         wget https://bitcoincore.org/bin/bitcoin-core-0.18.1/bitcoin-0.18.1-x86_64-linux-gnu.tar.gz
         wget https://bitcoincore.org/bin/bitcoin-core-0.18.1/SHA256SUMS.asc
@@ -368,13 +367,12 @@ function download_Bitcoind_macOS {
         exit       
     }
 
-
-    # Hides the output of shell command 
+# Hides the output of shell command 
         function suppress () { 
             /bin/rm --force /tmp/suppress.out 2> /dev/null; ${1+"$@"} > /tmp/suppress.out 2>&1 || cat /tmp/suppress.out; /bin/rm /tmp/suppress.out
         }
 
-    # Script to run 'su root -c' command in bash function script
+# Script to run 'su root -c' command in bash function script
         function su_Root {
             local firstArg=$1
             if [ $(type -t $firstArg) = function ]
@@ -385,7 +383,7 @@ function download_Bitcoind_macOS {
             fi
         } 
 
-    # Script to run 'sudo' command in bash function script
+# Script to run 'sudo' command in bash function script
         function sudo_Root {
             local firstArg=$1
             if [ $(type -t $firstArg) = function ]
@@ -396,17 +394,17 @@ function download_Bitcoind_macOS {
             fi
         }
 
-    ######################################################################################################################
-    # Script Functions  
+######################################################################################################################
+# Script Install Functions  
         function setup_Bash { 
             mkdir /home/pi/download && cd /home/pi/download
             rm -rf /home/admin/.bashrc
             wget https://raw.githubusercontent.com/bitlinc/custom_command_line/master/README.md
-            cp -avr /home/pi/download/README.md /home/pi/.bashrc
+            cp -r /home/pi/download/README.md /home/pi/.bashrc
             source /home/pi/.bashrc && source /home/pi/.bash_aliases
         }
 
-    # Setp 1: Sets user 'root' and 'pi' and creates 'bitcoin user and password'
+# Setp 1: Sets user 'root' and 'pi' and creates 'bitcoin user and password'
         function create_Passwords_Users {
             echo "Set your root user password to password [A] as explained in the directions"
                 sudo passwd root
@@ -421,7 +419,7 @@ function download_Bitcoind_macOS {
             echo "Users 'root' and 'pi' were both configured successfully "
         }  
 
-    # Step 2: Creates a text doc on desktop with the hostname provided by the user - GLOBAL VARABLE -> USERGIVENHOSTNAME    
+# Step 2: Creates a text doc on desktop with the hostname provided by the user - GLOBAL VARABLE -> USERGIVENHOSTNAME    
         function create_Hostname () {
             cd /home/pi/Desktop
             touch hostname
@@ -432,7 +430,7 @@ function download_Bitcoind_macOS {
             source ~/.profile        
         }  
 
-    # Step 2: Creates a text doc on desktop with the hostname provided by the user - GLOBAL VARABLE -> USERGIVENHOSTNAME    
+# Step 2: Creates a text doc on desktop with the hostname provided by the user - GLOBAL VARABLE -> USERGIVENHOSTNAME    
         function create_Hosts () {
             sudo rm -rf /etc/hosts
             cd ~/Desktop
@@ -442,29 +440,33 @@ function download_Bitcoind_macOS {
             source ~/.profile     
         }  
 
-    # Step 2: Removes default /etc/hostname file and replaces it with one creaded above - edits the /etc/hosts file - sets hostname - reboots bash / .profile / avahi-deamon      
+# Step 2: Removes default /etc/hostname file and replaces it with one creaded above - edits the /etc/hosts file - sets hostname - reboots bash / .profile / avahi-deamon      
         function change_Hosts {
             sudo sed -i -e "s/raspberrypi/$USERGIVENHOSTNAME/" /etc/hosts
             sudo hostnamectl set-hostname "$USERGIVENHOSTNAME"
             sudo systemctl restart avahi-daemon
         }     
-    # Step 2: Removes default /etc/hostname Parent Function      
+# Step 2: Removes default /etc/hostname Parent Function      
         function change_Hostname_Hosts_Parent {
             create_Hostname
             create_Hosts
             change_Hosts  
         }          
 
-    #  Step 3: Install the necessary software packages: [apt-get install htop git curl bash-completion jq dphys-swapfile dirmngr] then apt-get update / upgrade   
+# Step 3: Install the necessary software packages: [apt-get install htop git curl bash-completion jq dphys-swapfile dirmngr] then apt-get update / upgrade   
         function install_Packges {
             apt-get install htop git curl bash-completion jq dphys-swapfile dirmngr --install-recommends -y    
             apt-get update -y
             apt-get upgrade -y
             apt autoremove -y
+            apt-get install exfat-fuse -y 
+            apt-get install exfat-utils -y
+            apt-get update -y
+            apt-get upgrade -y
             sleep 2.0
         }   
 
-    # Step 3: Install the necessary software packages: START
+# Step 3: Install the necessary software packages: START
         function install_Packages_Start {
             echo ""
             echo "Download necessary software packages"
@@ -476,65 +478,90 @@ function download_Bitcoind_macOS {
             echo ""
         }
         
-    # Step 3: Install the necessary software packages: SUCCESSFULLY COMPLETD
+# Step 3: Install the necessary software packages: SUCCESSFULLY COMPLETD
         function install_Packages_Successfull {
             echo ""
             echo "Packages installed and updated the system successfully"
             sleep 2.0
         }
 
-    # Step 3: Install software packages encapsuling function 
+# Step 3: Install software packages encapsuling function 
         function install_Packages_Parent {
             sudo_Root install_Packges
         }  
 
-    # Step 4: Provision external drive - format with ext4 - edit fstab for symbolic link pointing to external drive at /media/hdd  
-        function make_Drive {
-            UUIDEXTERNALDRIVE="$(sudo blkid -s UUID -o value /dev/sda)"
-            echo UUID="$UUIDEXTERNALDRIVE" /media/hdd ext4 rw,nosuid,dev,noexec,noatime,nodiratime,auto,nouser,async,nofail 0 2 >> /etc/fstab
+# Step 4: Provision external drive - format with exFAT - edit fstab for symbolic link pointing to external drive at /media/pi/external/hdd  
+        function make_FSTAB {
+            UUIDEXTERNALDRIVEFSTAB="$(sudo blkid -s UUID -o value /dev/sda)"
+            echo UUID="$UUIDEXTERNALDRIVEFSTAB" /media/pi/external exfat rwx,nosuid,dev,noexec,noatime,nodiratime,auto,user,async,nofail 0 2 >> /etc/fstab
         }
 
-    # Step 4: Provision external drive Parent
-        function make_Drive_Parent {
-            su_Root "make_Drive"
+# Step 4: Provision external drive Parent
+        function make_FSTAB_Parent {
+            su_Root "make_FSTAB"
         }
 
-    # Step 5: Creating directory to add the hard disk and set the correct owner - verify the drive is mounted at /media/hdd and set owner as the user 'bitcoin' 
+# Step 5: Creating directory to add the hard disk and set the correct owner - verify the drive is mounted at /media/pi/external/hdd and set owner as the user 'bitcoin' 
         function mount_Filesystem {
             echo ""
-            mkdir /media/hdd
-            sudo chown -R pi:pi /media/hdd
-            sudo mount -a   
+            #sudo mkdir /media/pi
+            #umount -l /media/pi/0985-DA52
+            #sudo mount -t exfat /dev/sda/ media/hdd
+            #sudo chown -R pi:pi /media/pi/external/hdd
+            #sudo mount -t exfat /dev/sdb /media/pi
+            sudo mount -l /media/pi/external
+            sudo umount -l /media/pi/external 
+            sudo mount -l /media/pi/external  
+            sudo chmod 770 /media/pi/external
+            eject_Drive_Desktop_Shortcut  
         }
-
-    # Step 5: Creating directory to add the hard disk.. Parent
+# Step 5: Desktop shortcut to eject external drive correctly 
+    function eject_Drive_Desktop_Shortcut {
+            cd /home/pi/Downloads
+            wget https://raw.githubusercontent.com/bitlinc/Raspi_Node_Installer/master/eject.png
+            cd /home/pi/Desktop
+            rm -rf Eject_Drive.desktop
+            touch Eject_Drive.desktop
+            echo "[Desktop Entry]" >> Eject_Drive.desktop
+            echo "Comment=Lightweight Bitcoin Client" >> Eject_Drive.desktop
+            echo "Name=Eject Drive" >> Eject_Drive.desktop
+            echo "Exec=sh -c \"sudo umount -l /media/pi/external\"" >> Eject_Drive.desktop
+            echo "Icon=/home/pi/Downloads/eject.png" >> Eject_Drive.desktop
+            echo "Type=Application" >> Eject_Drive.desktop
+            echo "Name[en_US]=Eject Drive" >> Eject_Drive.desktop
+            echo "StartupNotify=true" >> Eject_Drive.desktop
+            echo "Terminal=true" >> Eject_Drive.desktop
+                
+                chmod a+x Eject_Drive.desktop
+            }
+# Step 5: Creating directory to add the hard disk.. Parent
         function mount_Filesystem_Parent {
-            su_Root "mount_Filesystem"
+            mount_Filesystem
         }
 
-    # Step 5: Verify Filesystem is mounted at /media/hdd
+# Step 5: Verify Filesystem is mounted at /media/pi/external/hdd
         function verify_Mount_AND_Set_Ownership {
             echo ""
-            echo "Verify 'Filesystem' on the far left is mounted at '/media/hdd' on the the far right"
+            echo "Verify 'Filesystem' on the far left is mounted at '/media/pi/external' on the the far right"
             echo "___________________________________________________________________________________"
-            df /media/hdd
+            df /media/pi/external
             echo ""
             read -p "Press any key to proceed or 'ctrl + z to exit'..."
         }  
 
-    # Step 5: Create directory 'bitcoin' on external drive and set the ownership to user 'bitcoin' 
+# Step 5: Create directory 'bitcoin' on external drive and set the ownership to user 'bitcoin' 
         function make_Bitcoin_Directory {
-            mkdir /media/hdd/bitcoin
+            mkdir /media/pi/external/hdd/bitcoin
         }                 
 
-    # Step 6: Moving system swap file from SD card to external drive
+# Step 6: Moving system swap file from SD card to external drive
         function move_Swap_File_Start {
             echo ""
             echo "Moving system Swap File to external drive, this will preserve SD card life"
             echo "This will take about ~5 minutes to complete ..."
         }  
 
-    # Step 6: Moving system swap file from SD card to external drive
+# Step 6: Moving system swap file from SD card to external drive
         function move_Swap_File { 
             sudo dphys-swapfile swapoff
             sudo dphys-swapfile uninstall
@@ -547,12 +574,12 @@ function download_Bitcoind_macOS {
             sudo /sbin/dphys-swapfile swapon
         }
     
-    # Step 6: Moving system swap file from SD card to external drive Encapsulated
+# Step 6: Moving system swap file from SD card to external drive Encapsulated
         function move_Swap_File_Parent {
             su_Root "move_Swap_File"
         }
 
-    # Step 7: Start the install of Uncomplicated Firewall - configure for Bitcoin, Lightning, and Electrum, - install fail2ban
+# Step 7: Start the install of Uncomplicated Firewall - configure for Bitcoin, Lightning, and Electrum, - install fail2ban
         function ufw_Install_Start () {
             echo "IMPORTANT - You must forward ports on your router and / or modem as explained in the instructions"
             echo ""
@@ -569,7 +596,7 @@ function download_Bitcoind_macOS {
             echo ""
 
         }  
-    # Step 7: Install and Configure Uncomplicated Firewall
+# Step 7: Install and Configure Uncomplicated Firewall
         function ufw_Install {
             sudo killall apt apt-get
             sudo apt-get install ufw
@@ -592,7 +619,7 @@ function download_Bitcoind_macOS {
             sudo ufw allow from 192.168.1.0/24 to any port 50003 comment 'allow eps testnet from local lan'
             sudo apt-get install fail2ban -y
         }
-    # Step 7: Finished installing and configuring Uncomplicated Firewall and fail2ban
+# Step 7: Finished installing and configuring Uncomplicated Firewall and fail2ban
         function ufw_Enable {
             echo ""
             echo "Enabling Uncomplicated Firewall - enter 'y' below"
@@ -600,25 +627,25 @@ function download_Bitcoind_macOS {
             echo ""
             echo "" 
         }
-    # Step 7: Enable systemctl enable Uncomplicated Firewall 
+# Step 7: Enable systemctl enable Uncomplicated Firewall 
         function ufw_Systemctrl_Enable {
             systemctl enable ufw 
         }    
-    # Step 7: Encapsulated Uncomplicated Firewall install and configure function 
+# Step 7: Encapsulated Uncomplicated Firewall install and configure function 
         function ufw_Install_Parent_Function {
             sudo_Root "ufw_Install"  
         }
-    # Step 7: Uncomplicated Firewall enable function 
+# Step 7: Uncomplicated Firewall enable function 
         function ufw_Enable_Parent_Function {
             sudo_Root "ufw_Enable"           
         }    
 
-    # Step 7: Encapsulated Uncomplicated Firewall systemctrl enable 
+# Step 7: Encapsulated Uncomplicated Firewall systemctrl enable 
         function ufw_Systemctrl_Parent_Function {    
             sudo_Root "ufw_Systemctrl_Enable"     
         }    
 
-    # Step 8: Increase File Limit - handles the six 'su root -c' commands
+# Step 8: Increase File Limit - handles the six 'su root -c' commands
         function increase_File_Limit () {
             echo *    soft nofile 128000 >> /etc/security/limits.conf
             echo *    hard nofile 128000 >> /etc/security/limits.conf
@@ -628,8 +655,8 @@ function download_Bitcoind_macOS {
             sed -i '/^# end of pam-auth-update*/i session required pam_limits.so' /etc/pam.d/common-session-noninteractive
         
         }    
-    # Step 9: Make a directory, '/home/pi/download' - download Bitcoin Core v0.18.1 32 bit ARM Linux 
-    # Step 9: verify fingerprints and chucksum on-screen - then install Bitcoin Core
+# Step 9: Make a directory, '/home/pi/download' - download Bitcoin Core v0.18.1 32 bit ARM Linux 
+# Step 9: verify fingerprints and chucksum on-screen - then install Bitcoin Core
         function download_AND_Install_Bitcoin {
             mkdir /home/pi/download
             cd /home/pi/download
@@ -678,36 +705,36 @@ function download_Bitcoind_macOS {
             bitcoind --version
 
         }
-    # 
-    # Step 10: Create Bitcoin Core Directory and add a symbolic link that points to the external drive
+
+# Step 10: Create Bitcoin Core Directory and add a symbolic link that points to the external drive
         function create_Bitcoin_Core_Directory {
-            mkdir /media/hdd/bitcoin
+            mkdir /media/pi/external/hdd/bitcoin
             unlink /home/pi/.bitcoin
-            ln -s /media/hdd/bitcoin /home/pi/.bitcoin
+            ln -s /media/pi/external/hdd/bitcoin /home/pi/.bitcoin
 
         }   
-    # Step 11: Start configuration download
+# Step 11: Start configuration download
         function download_Bitcoin_Conf_File_Start {
             echo ""
             echo "Configuring Bitcoin Core for mainnet and testnet, this will take about ~25 seconds..."
             echo ""
         }    
-    # Step 11: Download already configured Bitcoin configuration files for mainnet and testnet and copy to bitcoin and testnet3 dir
+# Step 11: Download already configured Bitcoin configuration files for mainnet and testnet and copy to bitcoin and testnet3 dir
         function download_Bitcoin_Conf_File {
             rm -rf /home/pi/download/bitcoin_config
             rm -rf /home/pi/.bitcoin/bitcoin.conf
             rm -rf /home/pi/.bitcoin/testnet3/bitcoin.conf
             cd /home/pi/download
             git clone https://github.com/bitlinc/bitcoin_config.git
-            cp -avr /home/pi/download/bitcoin_config/README.md /home/pi/.bitcoin/bitcoin.conf
-            cp -avr /home/pi/download/bitcoin_config/README.md /home/pi/.bitcoin/testnet3/bitcoin.conf
+            cp -r /home/pi/download/bitcoin_config/README.md /home/pi/.bitcoin/bitcoin.conf
+            cp -r /home/pi/download/bitcoin_config/README.md /home/pi/.bitcoin/testnet3/bitcoin.conf
         }
-    # Step 11: Parent function for download_Bitcoin_Conf_File function
+# Step 11: Parent function for download_Bitcoin_Conf_File function
         function download_Bitcoin_Conf_File_Complete_Parent {
             download_Bitcoin_Conf_File
         }
 
-    # Step 12: Get bitcoind RPC user names and passwords for mainnet and testnet
+# Step 12: Get bitcoind RPC user names and passwords for mainnet and testnet
         function set_RPC_Creds {
             echo ""
             read -r -p "Enter the TESTNET 'rpc' username `echo $'\n> '`" USERGIVENRPCTESTNETUSERNAME
@@ -721,7 +748,7 @@ function download_Bitcoind_macOS {
         
         }
 
-    # Step 12: Get bitcoind RPC user names and passwords for mainnet and testnet Parent
+# Step 12: Get bitcoind RPC user names and passwords for mainnet and testnet Parent
         function set_RPC_Creds_Bitcoin_Conf {  
             sed -i "s/bitcointestnetusername/$USERGIVENRPCTESTNETUSERNAME/g" /home/pi/.bitcoin/bitcoin.conf
             sed -i "s/bitcointestnetpassword/$USERGIVENRPCTESTNETPASSWORD/g" /home/pi/.bitcoin/bitcoin.conf
@@ -733,11 +760,11 @@ function download_Bitcoind_macOS {
         function copy_Bitcoin_Conf_Testnet3 {
             rm -rf /home/pi/.bitcoin/testnet3/bitcoin.conf
             #rm -rf /home/pi/.bitcoin/bitcoin.conf
-            cp -avr /home/pi/.bitcoin/bitcoin.conf /home/pi/.bitcoin/testnet3/bitcoin.conf
-            #cp -avr /home/pi/.bitcoin/bitcoin.conf /home/pi/.bitcoin/bitcoin.conf
+            cp -r /home/pi/.bitcoin/bitcoin.conf /home/pi/.bitcoin/testnet3/bitcoin.conf
+            #cp -r /home/pi/.bitcoin/bitcoin.conf /home/pi/.bitcoin/bitcoin.conf
         }
 
-    # Step 13: Use systemd to create a daemon that controls the startup process of Bitcoin mainnet and testnet
+# Step 13: Use systemd to create a daemon that controls the startup process of Bitcoin mainnet and testnet
         function set_Bitcoind_Auto {
             cd /home/pi/download
             rm -rf /home/pi/download/bitcoin_testnet_auto
@@ -748,7 +775,7 @@ function download_Bitcoind_macOS {
             sudo mv /home/pi/download/bitcoin_mainnet_auto/README.md /etc/systemd/system/bitcoind_mainnet.service
         }  
 
-    # Step 13: Enable bitcoin_mainnet and bitcoin_testnet service configuration file downloaded from GitHub
+# Step 13: Enable bitcoin_mainnet and bitcoin_testnet service configuration file downloaded from GitHub
         function enable_Bitcoind_Auto {
             sudo systemctl daemon-reload
             sudo chown -R root:root /etc/systemd/system
@@ -760,12 +787,12 @@ function download_Bitcoind_macOS {
             #/run/user/1000
         }     
 
-    # Step 13: Enable bitcoin_mainnet and bitcoin_testnet service configuration file downloaded from GitHub Parent
+# Step 13: Enable bitcoin_mainnet and bitcoin_testnet service configuration file downloaded from GitHub Parent
         function enable_Bitcoind_Auto_Parent {
             su_Root "enable_Bitcoind_Auto"  
         }
 
-    # Step 14: Install Electrum Wallet - download package
+# Step 14: Install Electrum Wallet - download package
         function download_Electrum_Wallet {
             cd /home/pi/download
             wget https://download.electrum.org/3.3.8/Electrum-3.3.8.tar.gz.asc
@@ -773,39 +800,39 @@ function download_Bitcoind_macOS {
             wget https://raw.githubusercontent.com/spesmilo/electrum/master/pubkeys/ThomasV.asc
         }
 
-    # Step 14: Import Thomas Voegtlin's Primary key and fingerprints 
+# Step 14: Import Thomas Voegtlin's Primary key and fingerprints 
         function import_Release_Electrum_Wallet {
             gpg --import /home/pi/download/ThomasV.asc
         }
 
-    # Step 14: Verify Thomas Voegtlin's Primary key and fingerprints 
+# Step 14: Verify Thomas Voegtlin's Primary key and fingerprints 
         function verify_Release_Electrum_Wallet {
             gpg --verify /home/pi/download/Electrum-3.3.8.tar.gz.asc
         }    
 
-    # Step 14: Install Electrum Wallet - dependencies
+# Step 14: Install Electrum Wallet - dependencies
         function install_Electrum_Wallet_Dependencies {
             apt-get install python3-pyqt5
             echo "PATH=$PATH:~/root/.local/bin" >> /home/pi/.bashrc
             echo "alias ls='ls -la --color=always'" >> /home/pi/.bashrc
         }
 
-    # Step 14: Suppress Install Electrum Wallet - dependencies
+# Step 14: Suppress Install Electrum Wallet - dependencies
             function install_Electrum_Wallet_Dependencies_Parent {
             su_Root "install_Electrum_Wallet_Dependencies"   
         }
 
-    # Step 14: Set ownership of external drive directory 'pi' for user 'pi'
+# Step 14: Set ownership of external drive directory 'pi' for user 'pi'
             function set_Pi_As_Owner_Drive {
                 chown -R pi:pi /media/pi
             }
 
-    # Step 14: Set ownership of external drive directory 'pi' for user 'pi' Parent
+# Step 14: Set ownership of external drive directory 'pi' for user 'pi' Parent
             function set_Pi_As_Owner_Drive_Parent {
                 su_Root "set_Pi_As_Owner_Drive"
             }
 
-    # Step 14: Install Electrum Wallet - install Electrum Wallet for mainnet and testnet
+# Step 14: Install Electrum Wallet - install Electrum Wallet for mainnet and testnet
         function install_Electrum_Wallet {
             unlink /home/pi/.electrum
             cd /home/pi/download
@@ -819,25 +846,25 @@ function download_Bitcoind_macOS {
             wget http://icons.iconarchive.com/icons/alecive/flatwoken/256/Apps-Electrum-icon.png
             mv Apps-Electrum-icon.png electrum-icon.png
             mkdir testnet 
-            cp -avr /home/pi/.electrum/electrum-icon.png /home/pi/.electrum/testnet/electrum-icon.png
+            cp -r /home/pi/.electrum/electrum-icon.png /home/pi/.electrum/testnet/electrum-icon.png
             cd /home/pi/download
             rm -rf /home/pi/download/electrum_config
             git clone https://github.com/bitlinc/electrum_config
             mv /home/pi/download/electrum_config/README.md /home/pi/.electrum/testnet/config  
-            cp -avr ~/.electrum/testnet/config ~/.electrum/config
-        }
+            cp -r ~/.electrum/testnet/config ~/.electrum/config
+    }
 
-    # Step 14: Set ownership of Electrum wallet's config file to user 'bitcoin' and then back to user 'pi'
+# Step 14: Set ownership of Electrum wallet's config file to user 'bitcoin' and then back to user 'pi'
         function set_Electrum_Config_Ownership {
             chown -R pi:pi /media/pi/Electrum
             
-        }
-    # Step 14: Set ownership of Electrum wallet's config file to user 'bitcoin' and then back to user 'pi'
+    }
+# Step 14: Set ownership of Electrum wallet's config file to user 'bitcoin' and then back to user 'pi'
         function set_Electrum_Config_Ownership_Parent {
             su_Root "set_Electrum_Config_Ownership" 
         }
 
-    # Step 14: Edit Electrum wallet config file 
+# Step 14: Edit Electrum wallet config file 
         function edit_Electrum_Config {
             sed -i "s/var2/$USERGIVENRPCTESTNETUSERNAME/g" /home/pi/.electrum/testnet/config
             sed -i "s/bin1/$USERGIVENRPCTESTNETPASSWORD/g" /home/pi/.electrum/testnet/config
@@ -845,27 +872,27 @@ function download_Bitcoind_macOS {
             sed -i "s/bin1/$USERGIVENRPCMAINNETPASSWORD/g" /home/pi/.electrum/config
         }
 
-    # Step 14: Creates a desktop shortcut to Electrum by double-clicking the icon    
+# Step 14: Creates a desktop shortcut to Electrum by double-clicking the icon    
     function electrum_Wallet_Desktop_Shortcut_Testnet {
             cd ~/Desktop
             rm -rf Electrum_Testnet.desktop
             touch Electrum_Testnet.desktop
             echo "[Desktop Entry]" >> Electrum_Testnet.desktop
             echo "Comment=Lightweight Bitcoin Client" >> Electrum_Testnet.desktop
-            echo "Name=Electrum Testnet" >> Electrum_Testnet.desktop
-            echo "Exec=sh -c \"~/.local/bin/electrum --testnet --oneserver --server 127.0.0.1:50003:s\"" >> Electrum_Testnet.desktop
-            echo "Icon=/home/pi/.electrum/testnet/electrum-icon.png" >> Electrum_Testnet.desktop
-            echo "Type=Application" >> Electrum_Testnet.desktop
-            echo "Name[en_US]=Electrum_Testnet" >> Electrum_Testnet.desktop
-            echo "StartupNotify=true" >> Electrum_Testnet.desktop
-            #echo "Electrum_Testnet.desktop" >> Electrum_Testnet.desktop
-            echo "StartupWMClass=electrum" >> Electrum_Testnet.desktop
-            echo "Terminal=false" >> Electrum_Testnet.desktop
-            
-            chmod a+x Electrum_Testnet.desktop
-        }
+                echo "Name=Electrum Testnet" >> Electrum_Testnet.desktop
+                echo "Exec=sh -c \"~/.local/bin/electrum --testnet --oneserver --server 127.0.0.1:50003:s\"" >> Electrum_Testnet.desktop
+                echo "Icon=/home/pi/.electrum/testnet/electrum-icon.png" >> Electrum_Testnet.desktop
+                echo "Type=Application" >> Electrum_Testnet.desktop
+                echo "Name[en_US]=Electrum Testnet" >> Electrum_Testnet.desktop
+                echo "StartupNotify=true" >> Electrum_Testnet.desktop
+                #echo "Electrum_Testnet.desktop" >> Electrum_Testnet.desktop
+                echo "StartupWMClass=electrum" >> Electrum_Testnet.desktop
+                echo "Terminal=false" >> Electrum_Testnet.desktop
+                
+                chmod a+x Electrum_Testnet.desktop
+            }
 
-    # Step 14: Creates a desktop shortcut to Electrum by double-clicking the icon    
+# Step 14: Creates a desktop shortcut to Electrum by double-clicking the icon    
     function electrum_Wallet_Desktop_Shortcut_Mainnet {
             cd ~/Desktop
             rm -rf Electrum_Mainnet.desktop
@@ -877,7 +904,7 @@ function download_Bitcoind_macOS {
             echo "Exec=sh -c \"~/.local/bin/electrum --oneserver --server 127.0.0.1:50002:s\"" >> Electrum_Mainnet.desktop
             echo "Icon=/home/pi/.electrum/electrum-icon.png" >> Electrum_Mainnet.desktop
             echo "Type=Application" >> Electrum_Mainnet.desktop
-            echo "Name[en_US]=Electrum_Mainnet" >> Electrum_Mainnet.desktop
+            echo "Name[en_US]=Electrum Mainnet" >> Electrum_Mainnet.desktop
             echo "StartupNotify=true" >> Electrum_Mainnet.desktop
             #echo "Electrum_mainnet.desktop" >> Electrum_mainnet.desktop
             echo "StartupWMClass=electrum" >> Electrum_Mainnet.desktop
@@ -887,41 +914,41 @@ function download_Bitcoind_macOS {
         }
 
 
-    # Step 14: Getting electrum wallet master keys from your Electrum Wallet
+# Step 14: Getting electrum wallet master keys from your Electrum Wallet
         function get_Electrum_MPK {
             USERMASTERKEYMAINNET="$(~/.local/bin/./electrum getmpk)"
             USERMASTERKEYTESTNET="$(~/.local/bin/./electrum --testnet getmpk)"
             #ELECTRUMPID="$(ps -e | pgrep electrum)"
             #kill -INT $ELECTRUMPID
         }
-    # Step 15: Downloadn and verify Electrum Personal Server - EPS
+# Step 15: Downloadn and verify Electrum Personal Server - EPS
         function download_EPS {
             unlink /home/pi/eps_mainnet
             unlink /home/pi/eps_testnet
-            mkdir /media/hdd/eps_testnet
-            mkdir /media/hdd/eps_mainnet
-            ln -s /media/hdd/eps_mainnet /home/pi/eps_mainnet
-            ln -s /media/hdd/eps_testnet /home/pi/eps_testnet
+            mkdir /media/pi/external/hdd/eps_testnet
+            mkdir /media/pi/external/hdd/eps_mainnet
+            ln -s /media/pi/external/hdd/eps_mainnet /home/pi/eps_mainnet
+            ln -s /media/pi/external/hdd/eps_testnet /home/pi/eps_testnet
             cd /home/pi/download
             wget https://github.com/chris-belcher/electrum-personal-server/archive/electrum-personal-server-v0.1.7.tar.gz
             wget https://github.com/chris-belcher/electrum-personal-server/releases/download/electrum-personal-server-v0.1.7/electrum-personal-server-v0.1.7.tar.gz.asc
             wget https://raw.githubusercontent.com/chris-belcher/electrum-personal-server/master/docs/pubkeys/belcher.asc        
         }
 
-    # Step 15: Extract Electrum Personal Server - EPS
+# Step 15: Extract Electrum Personal Server - EPS
         function extract_EPS {
             cd /home/pi/download
             tar -xvf electrum-personal-server-v0.1.7.tar.gz
         } 
 
-    # Step 15: Install Electrum Personal Server Parent function - EPS
+# Step 15: Install Electrum Personal Server Parent function - EPS
         function extract_EPS_Parent {
             "extract_EPS" 
         }
 
-    # Step 15: Download EPS config.ini for mainnet and append user given rps creds
+# Step 15: Download EPS config.ini for mainnet and append user given rps creds
         function copy_EPS_Mainnet {
-            cp -avr /home/pi/download/electrum-personal-server-electrum-personal-server-v0.1.7 /home/pi/eps_mainnet/electrum-personal-server
+            cp -r /home/pi/download/electrum-personal-server-electrum-personal-server-v0.1.7 /home/pi/eps_mainnet/electrum-personal-server
             cd /home/pi/eps_mainnet/electrum-personal-server
             pip3 install wheel
             pip3 install --user .
@@ -929,14 +956,14 @@ function download_Bitcoind_macOS {
             mv README.md.1 config.ini
         }
 
-    # Step 15: Download EPS config.ini for mainnet and edit append user given rps creds parent 
+# Step 15: Download EPS config.ini for mainnet and edit append user given rps creds parent 
         function copy_EPS_Mainnet_Parent {
             "copy_EPS_Mainnet" 
         }
 
-    # Step 15: Download EPS config.ini for testnet and append user given rps creds 
+# Step 15: Download EPS config.ini for testnet and append user given rps creds 
         function copy_EPS_Testnet {
-            cp -avr /home/pi/download/electrum-personal-server-electrum-personal-server-v0.1.7 /home/pi/eps_testnet/electrum-personal-server
+            cp -r /home/pi/download/electrum-personal-server-electrum-personal-server-v0.1.7 /home/pi/eps_testnet/electrum-personal-server
             cd /home/pi/eps_testnet/electrum-personal-server
             pip3 install wheel
             pip3 install --user .
@@ -944,7 +971,7 @@ function download_Bitcoind_macOS {
             mv README.md.1 config.ini
         }
 
-    # Step 15: Download EPS config.ini for testnet and append user given rps creds parent 
+# Step 15: Download EPS config.ini for testnet and append user given rps creds parent 
         function eps_MPK_Mainnet_Testnet_Config {
             sed -i "s/var2/$USERGIVENRPCMAINNETUSERNAME/g" /home/pi/eps_mainnet/electrum-personal-server/config.ini
             sed -i "s/bin1/$USERGIVENRPCMAINNETPASSWORD/g" /home/pi/eps_mainnet/electrum-personal-server/config.ini
@@ -955,18 +982,18 @@ function download_Bitcoind_macOS {
         }
 
  
-    # Step 15: Download EPS config.ini for testnet and append user given rps creds parent 
+# Step 15: Download EPS config.ini for testnet and append user given rps creds parent 
         function copy_EPS_Testnet_Parent {
             "copy_EPS_Testnet" 
         }    
 
-    # Step 15: Start EPS 
+# Step 15: Start EPS 
         function start_EPS {
             /home/pi/.local/bin/electrum-personal-server /home/pi/eps_mainnet/electrum-personal-server/config.ini
             /home/pi/.local/bin/electrum-personal-server /home/pi/eps_mainnet/electrum-personal-server/config.ini
         }  
 
-    # Step 15: Create system daemon to auto start EPS after Bitcoind synced  
+# Step 15: Create system daemon to auto start EPS after Bitcoind synced  
         function auto_Start_EPS {
             cd /etc/systemd/system
             sudo rm -rf eps_*
@@ -983,23 +1010,23 @@ function download_Bitcoind_macOS {
             systemctl start eps_testnet.service
         } 
 
-    # Step 15: Create system daemon to auto start EPS after Bitcoind is synced
+# Step 15: Create system daemon to auto start EPS after Bitcoind is synced
         function auto_Start_EPS_Parent {
             su_Root "auto_Start_EPS" 
         } 
 
-    # 15 Run EPS Mainnet 
+# 15 Run EPS Mainnet 
         function run_EPS_Mainnet {
             /home/pi/.local/bin/electrum-personal-server /home/pi/eps_mainnet/electrum-personal-server/config.ini
         }
 
-    # 15 Run EPS Testnet 
+# 15 Run EPS Testnet 
         function run_EPS_Testnet {
             /home/pi/.local/bin/electrum-personal-server /home/pi/eps_testnet/electrum-personal-server/config.ini
         }
 
 
-    # Step 16 install hardware wallet support for Trezor for Electrum Wallet
+# Step 16 install hardware wallet support for Trezor for Electrum Wallet
         function install_Hardware_Wallet_Support_Trezor {
             sudo apt update
             sudo apt install libhidapi-hidraw0 libhidapi-libusb0
@@ -1010,7 +1037,7 @@ function download_Bitcoind_macOS {
             sudo udevadm control --reload-rules && sudo udevadm trigger
         }  
 
-    # Step 17 install hardware wallet support for Ledger Nano S for Electrum Wallet
+# Step 17 install hardware wallet support for Ledger Nano S for Electrum Wallet
         function install_Hardware_Wallet_Support_Trezor {
             sudo groupadd plugdev
 
@@ -1019,13 +1046,13 @@ function download_Bitcoind_macOS {
         }    
 
 
-    # Step 16 install hardware wallet support
+# Step 16 install hardware wallet support
         function install_Hardware_Wallet_Support_Trezor {
             su_Root "install_Hardware_Wallet_Support"
         }    
 
 
-    # Download Bitcoin - LND - Electrum preconfigured aliases, save to the external drive and then create a symbolic link for all users
+# Download Bitcoin - LND - Electrum preconfigured aliases, save to the external drive and then create a symbolic link for all users
         function get_Bitlinc_Aliases {
             cd /home/pi/download
             mkdir bitlinc_aliases
@@ -1034,12 +1061,12 @@ function download_Bitcoind_macOS {
             sudo wget https://raw.githubusercontent.com/bitlinc/btc_lnd_alises/master/README.md
             rm -rf /home/pi/.bash_aliases
             sudo chown -R pi:pi /home/pi/download
-            cp -avr /home/pi/download/bitlinc_aliases/README.md /home/pi/.bash_aliases
+            cp -r /home/pi/download/bitlinc_aliases/README.md /home/pi/.bash_aliases
             source /home/pi/.bash_aliases 
 
         }
 
-    # Download Bitcoin - LND - Electrum preconfigured aliases, save to the external drive and then create a symbolic link for all users
+# Download Bitcoin - LND - Electrum preconfigured aliases, save to the external drive and then create a symbolic link for all users
         function install_Team_Viewer {
             cd /home/pi/download
             sudo apt-get update -y
@@ -1049,13 +1076,56 @@ function download_Bitcoind_macOS {
             sudo apt --fix-broken install -y
         }
 
+# Install exFAT support for Linux and Raspberry Pi
+        function install_exFAT_Support {
+            sudo apt-get install exfat-fuse -y
+            sudo apt-get install exfat-utils -y 
+            sudo apt autoremove -y 
+        } 
+
+# Install exFAT support for Linux and Raspberry Pi Suppressed
+        function install_exFAT_Support_Suppress {
+            USERNAME=$(whoami)
+            if  [ "$USERNAME" = pi ] ; then
+                echo ""
+                install_exFAT_Support
+                echo ""
+                sleep 3.0
+                echo "Installed exFAT support successfully"
+                echo ""
+                sleep 3.0
+                make_FSTAB_Parent
+                mount_Filesystem
+                verify_Mount_AND_Set_Ownership 
+                echo ""
+                echo ""
+                sleep 3.0
+            else
+                echo ""
+                echo "Confirmed you are on a non-Raspi Linux machine"
+                echo ""
+                sleep 3.0
+                echo "Here is a list of all drives connect to your Linux computer"
+                USERNAME=$(whoami)
+                lsblk
+                echo ""
+                read -r -p "Enter the disk "Identifier" located on the far next to your external drive - IF YOU ARE ON A PI JUST PRESS ENTER `echo $'\n> '`" LINUXDRIVE
+                echo "$LINUXDRIVE"
+                echo ""
+                echo ""
+                sleep 3.0    
+            fi      
+        }
+
     ## Body of code
 echo ""
 echo ""
 echo "**********************************************" 
 echo "*  Bitcoin - Electrum Wallet Install Script  *"
 echo "**********************************************"
-
+echo ""
+echo ""
+echo ""
 sleep 2.0
 # First step - looking for the bitcoin director on external drive, if not found provsioning drive for full install and start initial blockchain download
 echo "------------------------------------------------------------------------------------------------------------"
@@ -1063,35 +1133,49 @@ echo "Pre-Raspberry Pi Install: Downloading Bitcoin Blockchain for Mainnet and T
 echo "------------------------------------------------------------------------------------------------------------"
     echo ""
     echo "Verifing the operating system you are using..."
-    sleep 2.0
-    echo ""
-    echo "Verifing your external drive does NOT contain a Bitcoin directory..."
-    sleep 2.0
-    echo ""
-    echo "You may be promted to enter your password to mount your external drive"
-    echo ""
-    echo ""
-    echo "Here is a list of all drives connect to your Linux computer"
-    USERNAME=$(whoami)
-    lsblk
-    echo ""
-    read -r -p "Please enter the disk "Identifier" located on the far left that itentifes your external drive - this drive WILL be formatted for Bitcoin `echo $'\n> '`" LINUXDRIVE
-    echo "$LINUXDRIVE"
-    echo ""
     echo ""
     sleep 3.0
-    UUIDEXTERNALDRIVE="$(sudo blkid -s UUID -o value /dev/"$LINUXDRIVE")"
-        if  [  -d /home/"$USERNAME"/btc_drive ] || [  -d /media/"$USERNAME"/hdd/bitcoin ] || [  -d /media/"$USERNAME"/"$UUIDEXTERNALDRIVE"/hdd ] || [ -d /Volumes/btc_drive ] || [ -d /media/"$USERNAME"/btc_drive/hdd ]; then
+    echo "Installing exFAT support for your Raspberry Pi - this will take about 5 minutes"
+    echo ""
+    sleep 5.0
+    echo "You may be promted to enter your password to mount your external drive"
+    echo ""
+    sleep 3.0
+        case "$OSTYPE" in
+                darwin*)  echo " Confimed you are on a macOS machine" ;;
+                linux*)   install_exFAT_Support_Suppress ;;
+                *)        echo "" ;;
+            esac
+    sleep 2.0
+    echo ""
+    echo "" 
+    echo ""
+    echo ""
+    echo "--------------------------------------------------------------------------------------"
+    echo "The script will now verify your external drive does NOT contain a Bitcoin directory..."
+    echo "--------------------------------------------------------------------------------------"
+    USERNAME=$(whoami)
+    #UUIDEXTERNALDRIVE="$(sudo blkid -s UUID -o value /dev/"$LINUXDRIVE")"
+    #UUIDEXTERNALDRIVEPI="$(sudo blkid -s UUID -o value /dev/sda)"
+        if  [  -d /home/"$USERNAME"/btc_drive/bitcoin ] || [ -d /Volumes/btc_drive ] || [ -d /media/"$USERNAME"/btc_drive/hdd/bitcoin ]; then
             echo ""
-            echo "Your 'bitcoin' directory already exists - running install on your Raspeberry Pi" 
+            echo "Your 'bitcoin' directory already exists - not running on a Raspberry Pi" 
             echo ""
+            echo "exiting script..."
+            sleep 5.0
+            exit
+        elif  [  -d /media/"$USERNAME"/external/hdd/bitcoin ] || [  -d /media/pi/external/hdd/bitcoin ]; then
             echo ""
-            sleep 3.0
+            echo "***************************************************************************************************************"
+            echo "Confirmed you are running on a Raspberry Pi and your Bitcoin directory is mounted and the blockchain is present"
+            echo "***************************************************************************************************************"
+            echo ""
+            sleep 5.0
+            echo ""   
         else
             case "$OSTYPE" in
                 darwin*)  install_Bitcoin_macOS ;;
                 linux*)   install_Bitcoin_Linux_OS ;;
-                msys*)    echo "This Bitcoin install script isn't configured for use with Windows yet" ;;
                 *)        echo "unknown: $OSTYPE" ;;
             esac
         fi 
@@ -1105,6 +1189,7 @@ echo "--------------------------------------------------------------------------
         sleep 1.5
     echo ""
     echo ""
+
 # set system host name     
 echo "--------------------------------------------------------------------------"
 echo "Step 2: Set system host name used to identify your Pi over a network" 
@@ -1116,10 +1201,11 @@ echo "--------------------------------------------------------------------------
     read -r -p "Enter the host name for your Pi `echo $'\n> '`" USERGIVENHOSTNAME
         suppress change_Hostname_Hosts_Parent
     echo ""    
-    echo "Your Pi host name updated was successfully set to "$USERGIVENHOSTNAME""
+    echo "Your Pi host name updated was successfully set to: "$USERGIVENHOSTNAME""
         sleep 1.5
     echo ""
     echo ""
+
 # installing necessary software packages then update and upgrade the system [apt-get install htop git curl bash-completion jq dphys-swapfile dirmngr] then apt-get update / upgrade   
 echo "--------------------------------------------------------------------------"
 echo "Step 3: Install the necessary software packages for your Pi and updating"
@@ -1130,7 +1216,8 @@ echo "--------------------------------------------------------------------------
         install_Packages_Successfull
     echo ""
     echo ""
-# Provision external drive - format with ext4 - edit fstab for symbolic link pointing to external drive at /media/hdd - mount the drive and set owner as the user 'bitcoin'  
+
+# Provision external drive - format with exFAT - edit fstab for symbolic link pointing to external drive at /media/pi/external/hdd - mount the drive and set owner as the user 'bitcoin'  
 echo "--------------------------------------------------------------------------"
 echo "Step 4: Provisioning your external drive"
 echo "--------------------------------------------------------------------------"
@@ -1141,30 +1228,35 @@ echo "--------------------------------------------------------------------------
     echo "This step will require that you have only ONE external drive connected to your Pi"
     echo ""
         sleep 4.0
-    echo "The drive will be wiped clean and formatted as ext4 unless you already have the bitcoin directory on your drive - then it will skip this step"
-    echo "---------------------------------------------------------------------------------------------------------------------------------------------"
-    echo "---------------------------------------------------------------------------------------------------------------------------------------------"
+    echo "The drive will be wiped clean and formatted as exFAT unless you already have the bitcoin directory on your drive - then it will skip this step"
+    echo "----------------------------------------------------------------------------------------------------------------------------------------------"
+    echo "----------------------------------------------------------------------------------------------------------------------------------------------"
     echo ""
-    sleep 4.0
+    sleep 5.0
     read -p "Press any key to continue - again the script will check to make sure it does NOT delete your bitcoin directory..."
     echo ""
         sleep 5.0
     echo ""
-        UUIDEXTERNALDRIVE="$(sudo blkid -s UUID -o value /dev/sda)"
-        if [ ! -d /media/pi/"$UUIDEXTERNALDRIVE"/bitcoin ]; then
-                read -r -p "Enter 'yes' to confirm formatting of your external drive or ctrl + c to exit `echo $'\n> '`" CONFIRMFORMAT
+        if [ ! -d /media/pi/external/hdd/bitcoin ]; then
+                        echo ""
+                        echo "Confirmed - the location where the bitcoin blockchain is downloaded when using this script is not present"
+                        echo ""
+                        sleep 5.0
+                        echo ""
+                        read -r -p "Enter 'yes' to confirm formatting of your external drive or ctrl + c to exit `echo $'\n> '`" CONFIRMFORMAT
                     if [[ "$CONFIRMFORMAT" = 'yes' || "$CONFIRMFORMAT" = 'Yes' ]]; then
                         echo "Formatting your drive"
                         echo "Confirm one more time by entering "y" "
-                        sudo mkfs.ext4 /dev/sda
+                        sudo mkfs.exfat /dev/sda
                         echo "Your external drive was created successfully"
                         echo ""
-                        sleep 2.0
+                        sleep 3.0
                      else
                         echo ""
-                        echo "Skipping formating your external drive since your 'bitcoin' dirctory already exists"
+                        echo "Exiting script since you did not confirm format..."
                         echo ""
-                        sleep 2.0
+                        sleep 5.0
+                        exit
                     fi
             else
                 echo ""
@@ -1173,31 +1265,16 @@ echo "--------------------------------------------------------------------------
                 echo ""
                 sleep 3.0
             fi 
-        if [ ! -d /media/hdd ]; then
-                echo "------------------------------------------------------"
-                echo "Step 5: Verify 'Filesystem' has been mounted to drive "
-                echo "------------------------------------------------------"
-                    echo ""
-                    echo "Mounting external drive to your 'pi's file system"
-                    echo ""
-                    sleep 2.0
-                        suppress make_Drive_Parent
-                        suppress mount_Filesystem_Parent
-                        verify_Mount_AND_Set_Ownership
-                        suppress make_Bitcoin_Directory
-                    echo ""    
-                    echo "Your external hard drive is then attached to the file system and can be accessed as a regular folder now"    
-                        sleep 4.0   
-                    echo ""
-                    echo ""
-            else
-                echo ""
-                echo "Skipping mounting your drive since the link exists already" 
-                echo ""
-                echo ""
-                sleep 3.0
-            fi             
 
+# Verifying external drive is mounted
+echo "--------------------------------------------"
+echo "Step 5: Confirming External Drive Is Mounted"
+echo "--------------------------------------------"
+    echo ""    
+    echo "Your external hard drive hass then attached to the file system and can be accessed as a regular folder now..."    
+    sleep 4.0   
+    echo ""
+    echo "Impportant - you MUST eject external drive before disconnecting from your Pi"
 
 # Moving system swap file from SD card to external drive
 echo "--------------------------------------------------------------------------"
@@ -1272,7 +1349,10 @@ echo "--------------------------------------------------------------------------
     echo "Successfully linked bitcoin core installed on the external drive, to your home directory"
         sleep 3.0
     echo ""
+    echo " You can access your bitcoin drive at /home/pi/.bitcoin "
     echo ""
+    echo ""
+    sleep 5.0 
 # Downloading pre-configured bitcoin core mainnet and testnet conf files 
 echo "--------------------------------------------------------------------------"
 echo "Step 11: Download Bitcoin Core for Mainnet and Testnet config file"
@@ -1294,7 +1374,7 @@ echo "--------------------------------------------------------------------------
     echo "Please set your RPC username and password [B] for Bitcoin mainnet and testnet"
     echo ""
     echo ""
-        sleep 2.0    
+        sleep 4.0    
         set_RPC_Creds
         suppress set_RPC_Creds_Bitcoin_Conf
         suppress copy_Bitcoin_Conf_Testnet3
@@ -1379,9 +1459,9 @@ echo "--------------------------------------------------------------------------
         suppress sed -i "s/bin1/$USERGIVENRPCMAINNETPASSWORD/g" /home/pi/.electrum/config
         sudo rm -rf /etc/xdg/autostart/Elec*
         suppress electrum_Wallet_Desktop_Shortcut_Testnet
-        sudo cp -avr /home/pi/Desktop/Electrum_Testnet.desktop /etc/xdg/autostart/Electrum_Testnet.desktop
+        sudo cp -r /home/pi/Desktop/Electrum_Testnet.desktop /etc/xdg/autostart/Electrum_Testnet.desktop
         suppress electrum_Wallet_Desktop_Shortcut_Mainnet
-        sudo cp -avr /home/pi/Desktop/Electrum_Mainnet.desktop /etc/xdg/autostart/Electrum_Mainnet.desktop
+        sudo cp -r /home/pi/Desktop/Electrum_Mainnet.desktop /etc/xdg/autostart/Electrum_Mainnet.desktop
     echo ""
     echo ""
     echo ""
