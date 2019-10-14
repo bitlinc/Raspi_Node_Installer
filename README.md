@@ -1,14 +1,13 @@
 # One click -> Full Bitcoin Node || Electrum Wallet Connecting Only To YOUR Node || Mainnet & Testnet Run Simultaneously
-- go from a blank external drive to a full bitcoin node and a Electrum wallet connecting ONLY to your node
-- mainnet and testnet run simultaneous as do both Electrum wallets
-- bitcoin and Electrum are set as a service and configured to auto start with the Raspberry Pi
 
-# Who is this script for 
-This script is designed for the user that has little to no experence with the command line interface, Bitcoin or Raspberry Pi
 
 # What is this script and what does it do
 This script will setup a full Bitcoin Node for mainnet and testnet and setup Electrum Wallet to connect only to your node
     * All programs and services are configured to auto start when you boot or reboot the Pi - no input needed from user
+
+
+# Who is this script for 
+This script is designed for the user that has little to no experence with the command line interface, Bitcoin or Raspberry Pi
 
 # What you need
 1. Raspberry Pi version 3 or 4 (if you haven't bought a Pi yet, I would get the 4 GB Pi 4 version)
@@ -26,7 +25,7 @@ Step 1:
 
 
 # Warnings 
-1. If you 
+1. Because the external drive is formatted as exfat the rasp-pi will take longer then normal to mount the drive   
 
 # Recommeded Reading For All Users 
 
