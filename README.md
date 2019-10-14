@@ -26,6 +26,8 @@ Step 1:
 
 # Warnings 
 1. Because the external drive is formatted as exfat the rasp-pi will take longer then normal to mount the drive   
+2. You can not run this scrip in a SSH shell
+
 
 # Recommeded Reading For All Users 
 
