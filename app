@@ -108,9 +108,9 @@ function remove_Create_Directory_macOS () {
     }
 
 
-echo "*************************************************" 
-echo "*  Bitcoin - Electrum Wallet Install UPDATE APP *"
-echo "*************************************************"
+echo "*************************************************************" 
+echo "*  Bitcoin - Electrum Wallet Install UPDATE APP Versino 4.0 *"
+echo "*************************************************************"
 echo ""
 echo ""
 echo ""
