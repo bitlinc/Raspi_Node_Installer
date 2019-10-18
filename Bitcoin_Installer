@@ -1088,9 +1088,11 @@ function download_Bitcoind_macOS {
             USERNAME=$(whoami)
             if  [ "$USERNAME" = pi ] ; then
                 echo ""
+                echo "Installing exFAT support for your Raspberry Pi - this will take about 5 minutes"
+                echo ""
                 install_exFAT_Support
                 echo ""
-                sleep 3.0
+                echo ""
                 echo "Installed exFAT support successfully"
                 echo ""
                 sleep 3.0
@@ -1133,9 +1135,6 @@ echo "Pre-Raspberry Pi Install: Downloading Bitcoin Blockchain for Mainnet and T
 echo "------------------------------------------------------------------------------------------------------------"
     echo ""
     echo "Verifing the operating system you are using..."
-    echo ""
-    sleep 3.0
-    echo "Installing exFAT support for your Raspberry Pi - this will take about 5 minutes"
     echo ""
     sleep 5.0
     echo "You may be promted to enter your password to mount your external drive"
