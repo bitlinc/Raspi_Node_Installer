@@ -1274,6 +1274,9 @@ echo "--------------------------------------------"
     echo "Your external hard drive hass then attached to the file system and can be accessed as a regular folder now..."    
     sleep 4.0   
     echo ""
+    echo "This means you have to use the desktop app "Eject" to eject your external drive"
+    echo ""
+    sleep 4.0
     echo "Impportant - you MUST eject external drive before disconnecting from your Pi"
 
 # Moving system swap file from SD card to external drive
