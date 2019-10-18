@@ -33,8 +33,8 @@ USERNAME=$(whoami)
         mkdir /home/"$USERNAME"/Bitcoin_Installer
         cd /home/"$USERNAME"/Bitcoin_Installer
         rm -rf /home/pi/Desktop/BTC_Installer.desktop
-        wget https://raw.githubusercontent.com/bitlinc/Raspi_Node_Installer/master/app
-        wget https://raw.githubusercontent.com/bitlinc/Raspi_Node_Installer/master/bitcoin_installer_Icon.png
+        curl -O https://raw.githubusercontent.com/bitlinc/Raspi_Node_Installer/master/Bitcoin_Installer
+        curl -O https://raw.githubusercontent.com/bitlinc/Raspi_Node_Installer/master/bitcoin_install_icon.png
         chmod +x /home/"$USERNAME"/Bitcoin_Installer/app
 }
 
@@ -49,13 +49,13 @@ USERNAME=$(whoami)
         touch BTC_Installer.desktop
         echo "[Desktop Entry]" >> BTC_Installer.desktop
         echo "Encoding=UTF-8" >> BTC_Installer.desktop
-        echo "Name=Run BTC Installer" >> BTC_Installer.desktop
+        echo "Name= BTC Installer" >> BTC_Installer.desktop
         #echo "Exec=gnome-terminal --title "Updating to the newest version"  --tab -- /home/"$USERNAME"/Bitcoin_Installer_Update/./app" >> BTC_Installer.desktop
-        echo "Exec=sh -c \" /home/"$USERNAME"/Bitcoin_Installer_Update/./app" >> BTC_Installer.desktop
+        echo "Exec=sh -c \" /home/"$USERNAME"/Bitcoin_Installer/./app" >> BTC_Installer.desktop
         echo "Icon=/home/"$USERNAME"/Bitcoin_Installer/bitcoin_installer_Icon.png" >> BTC_Installer.desktop
         echo "Terminal=true" >> BTC_Installer.desktop
         echo "Type=Application" >> BTC_Installer.desktop
-        echo "Name[en_US]=BTC_Installer" >> BTC_Installer.desktop
+        echo "Name[en_US]=BTC Installer" >> BTC_Installer.desktop
         chmod a+x BTC_Installer.desktop
     }
 
@@ -81,15 +81,15 @@ function remove_Create_Directory_macOS () {
         rm -rd ~/Bitcoin_Installer
         mkdir ~/Bitcoin_Installer
         cd ~/Bitcoin_Installer
-        curl -O https://raw.githubusercontent.com/bitlinc/Raspi_Node_Installer/master/app
-        curl -O https://raw.githubusercontent.com/bitlinc/Raspi_Node_Installer/master/bitcoin_installer_Icon.png
-        chmod +x ~/Bitcoin_Installer/app
+        curl -O https://raw.githubusercontent.com/bitlinc/Raspi_Node_Installer/master/Bitcoin_Installer
+        curl -O https://raw.githubusercontent.com/bitlinc/Raspi_Node_Installer/master/bitcoin_install_icon.icns
+        chmod +x ~/Bitcoin_Installer/Bitcoin_Installer
 }
 
 
     function create_macOS_BTC_Installer_Application () {
-        rm -rf ~/Desktop/Bitcoin_Installer
-        cp -a ~/Bitcoin_Installer/app ~/Desktop/Bitcoin_Installer
+        rm -rf ~/Desktop/BTC_Installer.desktop
+        cp -a ~/Bitcoin_Installer/Bitcoin_Installer ~/Desktop/Bitcoin_Installer
     }
 
     function create_macOS_Desktop_App {
