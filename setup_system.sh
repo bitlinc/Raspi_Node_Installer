@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+#!/usr/bin/bash
 
 #Functions
 
@@ -24,6 +25,7 @@ function install_guizero_macOS {
     echo "Step 3: Installing guizero for macOS"
     echo ""
     pip3 install guizero
+    exit
 }
 
 #Install Python 3 for Linux
