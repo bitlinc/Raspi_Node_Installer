@@ -25,7 +25,7 @@ function install_guizero_macOS {
     echo "Step 3: Installing guizero for macOS"
     echo ""
     pip3 install guizero
-    exit
+    exit 1
 }
 
 #Install Python 3 for Linux
@@ -43,6 +43,7 @@ function install_guizero_linux {
     echo "Step 2: Installing guizero for Linux"
     echo ""
     pip3 install guizero
+    exit 1
 }
 
 #Install Python 3 for Raspberry Pi
@@ -60,6 +61,7 @@ function install_guizero_raspberry_pi {
     echo "Step 2: Installing guizero for Raspberry Pi"
     echo ""
     pip3 install guizero
+    exit 1
 }
 
 #Setup Installation for macOS
