@@ -1,4 +1,4 @@
-# macOS Running Over Tor and Only Connecting Over Tor
+# macOS Running Clearnet
 # bitcoind configuration for mainnet and testnet
 # datadir=/Volumes/btc_drive/hdd/bitcoin
 
