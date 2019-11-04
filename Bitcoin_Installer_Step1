@@ -226,6 +226,8 @@ function download_Bitcoind_macOS {
         echo "---------------------"
         echo ""
         echo ""
+        echo "Please enter your password to install Bitcoin"
+        echo ""
         sleep 2.0
         suppress install_Bitcoin_QT_macOS_Parent
         echo ""
@@ -333,7 +335,6 @@ function bitcoin_network_choice_Start_function {
             exit 
     elif [ "$BTCNETWORK" == "Testnet" ]; then
             download_Bitcoin_Testnet_Shortcut_macOS
-            sleep 10.0
             /Applications/Bitcoin-Qt.app/Contents/MacOS/Bitcoin-Qt -datadir=/Volumes/btc_drive/hdd/bitcoin -testnet 
             sudo diskutil umount /Volumes/btc_drive
             echo ""
@@ -363,7 +364,7 @@ function intro_Start_Bitcoin_QT_macOS {
     echo "Allow bitcoin core wallet to run 24/7 until the wallet says '100% synced' - in the bottom left hand corner"
     echo ""
     sleep 3.0
-    echo "Once bitcoin core wallet is fully synced you must close the application so that bitcoin core wallet for mainnet can sync too"
+    echo "Once bitcoin core wallet is fully synced you must close the application"
     echo ""
     sleep 3.0
     echo "Mainnet is a different blockchain then testnet and is ten times the size so this download can take a bit of time"
@@ -371,6 +372,9 @@ function intro_Start_Bitcoin_QT_macOS {
     sleep 3.0
     echo ""
     echo ""
+    echo "**********************************"
+    echo "Downloading and installing Bitcoin"
+    echo "**********************************"
     sleep 6.0 
   }
 
@@ -573,21 +577,21 @@ function provision_Drive_macOS {
 # Download Bitcoin Mainnet Shortcut macOS
 function download_Bitcoin_Mainnet_Shortcut_macOS {
     USERNAME=$(whoami)
-    rm -rf /Users/macos/Desktop/Bitcoin\ Mainnet
+    rm -rf /Users/"$USERNAME"/Desktop/Bitcoin\ Mainnet
     cd /Users/"$USERNAME"/Desktop; wget https://github.com/bitlinc/Raspi_Node_Installer/raw/master/Bitcoin%20Mainnet.zip
-    ditto -x -v -k --sequesterRsrc /Users/macos/Desktop/Bitcoin\ Mainnet.zip /Users/macos/Desktop
-    source ~/.bash_profile
-    rm -rf /Users/macos/Desktop/Bitcoin\ Mainnet.zip
+    ditto -x -v -k --sequesterRsrc /Users/"$USERNAME"/Desktop/Bitcoin\ Mainnet.zip /Users/"$USERNAME"/Desktop
+    #source ~/.bash_profile
+    rm -rf /Users/"$USERNAME"/Desktop/Bitcoin\ Mainnet.zip
 }
 
 # Download Bitcoin Testnet Shortcut macOS
 function download_Bitcoin_Testnet_Shortcut_macOS {
     USERNAME=$(whoami)
-    rm -rf /Users/macos/Desktop/Bitcoin\ Testnet
+    rm -rf /Users/"$USERNAME"/Desktop/Bitcoin\ Testnet
     cd /Users/"$USERNAME"/Desktop; wget https://github.com/bitlinc/Raspi_Node_Installer/raw/master/Bitcoin%20Testnet.zip
-    ditto -x -v -k --sequesterRsrc /Users/macos/Desktop/Bitcoin\ Testnet.zip /Users/macos/Desktop
-    source ~/.bash_profile
-    rm -rf /Users/macos/Desktop/Bitcoin\ Testnet.zip
+    ditto -x -v -k --sequesterRsrc /Users/"$USERNAME"/Desktop/Bitcoin\ Testnet.zip /Users/"$USERNAME"/Desktop
+    #source ~/.bash_profile
+    rm -rf /Users/"$USERNAME"/Desktop/Bitcoin\ Testnet.zip
 }
 
 # Install Bitcoin depending on OS 
