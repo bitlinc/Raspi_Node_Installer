@@ -151,11 +151,12 @@ function download_Bitcoind_Linux {
     }
 
 function download_Bitcoind_macOS {
-    if [ -d ~/Bitlinc ]; then
+    if [ -d /Applications/Bitcoin-Qt.app ]; then
             echo ""
             echo ""
-            echo "Your 'bitcoin' directory already exists - CHANGING CONFIGURATION then Starting Bitcoin"
+            echo "Bitcoin is already installed on your Mac - checking for existing Bitcoin directory"
             echo ""
+            sleep 3.0
             echo "Your Bitcoin directory will NOT be altered - only your Configuration File"          
             sleep 5.0
             echo ""
@@ -472,7 +473,9 @@ function install_Bitcoin_Linux_OS {
     echo ""
     echo "--------------------------------------------------------------------------------------"
     echo "Please enter your password to mount your external drive to /home/"$USERNAME"/btc_drive"
+    echo ""
     echo " This is the location of where the Bitcoins blockchain will be downloaded to"
+    echo ""
     echo ""
     sleep 3.5
     su_Root "chown -R "$USERNAME":"$USERNAME" /home/"$USERNAME"/btc_drive"         
@@ -509,11 +512,12 @@ function provision_Drive_macOS {
     USERNAME=$(whoami)
     if [ -d /Volumes/btc_drive/hdd/bitcoin ]; then
         echo ""
-        echo "Your 'bitcoin' directory already exists - Starting Bitcoin" 
+        echo "Your 'bitcoin' directory already exists on your external drive - Starting Bitcoin-qt" 
         echo ""
-        /Applications/Bitcoin-Qt.app/Contents/MacOS/Bitcoin-Qt -datadir=/Volumes/btc_drive/hdd/bitcoin -testnet 
-        /Applications/Bitcoin-Qt.app/Contents/MacOS/Bitcoin-Qt -datadir=/Volumes/btc_drive/hdd/bitcoin
-        sudo diskutil umount /Volumes/btc_drive  
+        download_Bitcoind_macOS
+        #/Applications/Bitcoin-Qt.app/Contents/MacOS/Bitcoin-Qt -datadir=/Volumes/btc_drive/hdd/bitcoin -testnet 
+        #/Applications/Bitcoin-Qt.app/Contents/MacOS/Bitcoin-Qt -datadir=/Volumes/btc_drive/hdd/bitcoin
+        #sudo diskutil umount /Volumes/btc_drive  
     else 
         echo ""
         echo "Confirmed - There is not a Bitcoin directory found on your external drive external drive"
