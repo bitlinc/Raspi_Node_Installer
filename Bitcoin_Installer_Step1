@@ -334,7 +334,7 @@ function bitcoin_network_choice_Start_function {
             echo ""
             exit 
     elif [ "$BTCNETWORK" == "Testnet" ]; then
-            download_Bitcoin_Testnet_Shortcut_macOS
+            suppress download_Bitcoin_Testnet_Shortcut_macOS
             /Applications/Bitcoin-Qt.app/Contents/MacOS/Bitcoin-Qt -datadir=/Volumes/btc_drive/hdd/bitcoin -testnet 
             sudo diskutil umount /Volumes/btc_drive
             echo ""
