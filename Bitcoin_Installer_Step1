@@ -167,7 +167,6 @@ function download_Bitcoind_macOS {
             bitcoin_network_choice_Start_function  
     else 
         intro_Start_Bitcoin_QT_macOS
-        mkdir ~/Bitlinc
         cd ~/Bitlinc; curl -O https://bitcoincore.org/bin/bitcoin-core-0.18.1/bitcoin-0.18.1-osx.dmg
         cd ~/Bitlinc; curl -O https://bitcoincore.org/bin/bitcoin-core-0.18.1/SHA256SUMS.asc
         cd ~/Bitlinc; curl -O https://bitcoin.org/laanwj-releases.asc
@@ -565,17 +564,7 @@ function provision_Drive_macOS {
     echo ""
     sleep 3.5
     check_For_Bitcoin_Dir_macOS         
-    }
-
-
-
-function download_Bitcoin_Mainnet_Shortcut_macOS {
-    rm -rf ~/Desktop/Bitcoin\ Mainnet.command
-    rm -rf ~/Desktop/Bitcoin_Mainnet.zip
-    cd ~/Desktop; wget https://github.com/bitlinc/Raspi_Node_Installer/raw/master/Bitcoin_Mainnet.zip
-    open Bitcoin_Mainnet.zip
-    rm -rf ~/Desktop/Bitcoin_Mainnet.zip
- }
+}
 
 # Download Bitcoin Mainnet Shortcut macOS
 function download_Bitcoin_Mainnet_Shortcut_macOS {
@@ -585,7 +574,7 @@ function download_Bitcoin_Mainnet_Shortcut_macOS {
     ditto -x -v -k --sequesterRsrc /Users/macos/Desktop/Bitcoin\ Mainnet.zip /Users/macos/Desktop
     source ~/.bash_profile
     rm -rf /Users/macos/Desktop/Bitcoin\ Mainnet.zip
- }
+}
 
 # Download Bitcoin Testnet Shortcut macOS
 function download_Bitcoin_Testnet_Shortcut_macOS {
@@ -595,21 +584,22 @@ function download_Bitcoin_Testnet_Shortcut_macOS {
     ditto -x -v -k --sequesterRsrc /Users/macos/Desktop/Bitcoin\ Testnet.zip /Users/macos/Desktop
     source ~/.bash_profile
     rm -rf /Users/macos/Desktop/Bitcoin\ Testnet.zip
- }
+}
 
-    function install_Bitcoin_For_macOS_Or_Linux {
-            USERNAME=$(whoami)
-            if  [ "$USERNAME" = pi ] ; then
-                echo ""
-            else
-                case "$OSTYPE" in
-                    darwin*)  provision_Drive_macOS ;;
-                    linux*)   install_Bitcoin_Linux_OS ;;
-                    msys*)    echo "This Bitcoin install script isn't configured for use with Windows yet" ;;
-                    *)        echo "unknown: $OSTYPE" ;;
-                esac 
-            fi      
-        }
+# Install Bitcoin depending on OS 
+function install_Bitcoin_For_macOS_Or_Linux {
+    USERNAME=$(whoami)
+    if  [ "$USERNAME" = pi ] ; then
+        echo ""
+    else
+        case "$OSTYPE" in
+            darwin*)  provision_Drive_macOS ;;
+            linux*)   install_Bitcoin_Linux_OS ;;
+            msys*)    echo "This Bitcoin install script isn't configured for use with Windows yet" ;;
+            *)        echo "unknown: $OSTYPE" ;;
+        esac 
+    fi      
+}
 
 # Install All Functions
 function install_all_Linux {
@@ -620,7 +610,7 @@ function install_all_Linux {
         un_Mount
         un_Mount_Suppress
                 
- }
+}
 
 case "$OSTYPE" in
         darwin*)  download_Bitcoind_macOS ;;
