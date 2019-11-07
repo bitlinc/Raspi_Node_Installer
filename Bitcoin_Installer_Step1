@@ -351,7 +351,6 @@ function bitcoin_network_choice_Start_function {
     fi
  }
 
-
 # Intro to starting Bitcoin-QT macOS
 function intro_Start_Bitcoin_QT_macOS {
     echo ""
@@ -405,7 +404,7 @@ function make_Mount_Point_Parent {
     make_Mount_Point
  } 
 
-# Creating directory to add the hard disk and set the correct owner - verify the drive is mounted at /home/hdd and set owner as the user 'bitcoin' Linux
+#Creating directory to add the hard disk and set the correct owner - verify the drive is mounted at /home/hdd and set owner as the user 'bitcoin' Linux
 function mount_Filesystem {
     USERNAME=$(whoami)
     mkdir /home/"$USERNAME"/btc_drive/hdd  
