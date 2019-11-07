@@ -23,7 +23,7 @@
 # Wipe the GUI script, desktop shortcut, and Step1 script while not touching any of the users data
 function remove_downloaded_scrips_and_confs {
     #rm -rf ~/Bitlinc/Scripts/Bitcoin_Installer_Step1
-    rm -rf ~/Bitlinc/Scripts/macos_GUI.zip
+    rm -rf ~/Bitlinc/Scripts/macOS_GUI.zip
     rm -rf ~/Desktop/Bitcoin\ Installer
     rm -rf ~/Bitlinc/Scripts/Bitcoin_Installer_Step1
     #rm -rf /Volumes/btc_drive/hdd/bitcoin/bitcoin.conf
@@ -32,8 +32,8 @@ function remove_downloaded_scrips_and_confs {
 
 # Download the GUI script, desktop shortcut, and Step1 script
 function download_all_scrips_and_confs {
-    cd ~/Bitlinc/Scripts; wget  https://github.com/bitlinc/Raspi_Node_Installer/raw/master/macos_GUI.zip
-    ditto -x -v -k --sequesterRsrc ~/Bitlinc/Scripts/macos_GUI.zip ~/Desktop
+    cd ~/Bitlinc/Scripts; wget  https://github.com/bitlinc/Raspi_Node_Installer/raw/master/macOS_GUI.zip
+    ditto -x -v -k --sequesterRsrc ~/Bitlinc/Scripts/macOS_GUI.zip ~/Desktop
     cd ~/Bitlinc/Scripts; wget https://raw.githubusercontent.com/bitlinc/Raspi_Node_Installer/master/Bitcoin_Installer_Step1
     chmod a+x ~/Bitlinc/Scripts/Bitcoin_Installer_Step1
     rm -rf ~/Desktop/Start\ Bitcoin\ Installer.command
