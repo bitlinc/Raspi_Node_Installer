@@ -19,14 +19,15 @@
 # Directions
 # Step 1. Download the 'Start Bitcoin Installer.zip (link below), unzip, and then run (installs dependencies for the GUI)
 https://github.com/bitlinc/Raspi_Node_Installer/raw/master/Start%20Bitcoin%20Installer.zip
-# Step 2. After 'Start Bitcoin Installer' runs, it will delete it's self and download the Bitcoin Installer 
+# Step 2. After 'Start Bitcoin Installer' runs, it will delete itself and download the Bitcoin Installer app to the desktop 
 # Step 3. Run the 'Bitcoin Installer' application that is located on your desktop to install Bitcoin
+# Step 4. Update application with one click for upcoming dates - LND, Electrum, EPS, Wasbi, BTCPay Server,  
 
 
 
 
 # 
-# STILL IN DEVELOPMENT
+# STILL IN DEVELOPMENT - will be live soon
 #
 # What is this script and what does it do
 This script will setup a full Bitcoin Node for mainnet and testnet and setup Electrum Wallet to connect only to your node
