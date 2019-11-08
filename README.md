@@ -17,10 +17,10 @@
 * if your router doesn't have UPnP support manual setup instructions: https://bitcoin.org/en/full-node#network-configuration
 
 # Directions
-Step 1. Download the 'Start Bitcoin Installer.zip (link below), unzip, and then run (this will install libs for the GUI
+# Step 1. Download the 'Start Bitcoin Installer.zip (link below), unzip, and then run (this will install libs for the GUI
 https://github.com/bitlinc/Raspi_Node_Installer/raw/master/Start%20Bitcoin%20Installer.zip
-Step 2. After 'Start Bitcoin Installer' runs, it will delete it's self and download the Bitcoin Installer 
-Step 3. Run the 'Bitcoin Installer' application that is located on your desktop to install Bitcoin
+# Step 2. After 'Start Bitcoin Installer' runs, it will delete it's self and download the Bitcoin Installer 
+# Step 3. Run the 'Bitcoin Installer' application that is located on your desktop to install Bitcoin
 
 
 
