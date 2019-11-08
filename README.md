@@ -6,7 +6,7 @@
 #################################################################################################################
 # MACOS BETA VERSION ONLY
 ***Compatible with macOS High Sierra and Catalina, Mojave has a weird bug in the GUI and some buttons won't load
-***View all scipts in this repo
+***View all scipts in this repo --> https://github.com/bitlinc/Raspi_Node_Installer
 
 # Notices
 * after installing Bitcoin there will be shortcuts for mainnet and test created on your desktop, this is how you run Bitcoin
@@ -17,15 +17,17 @@
 * if your router doesn't have UPnP support manual setup instructions: https://bitcoin.org/en/full-node#network-configuration
 
 # Directions
-Step 1. Download the 'Start Bitcoin Installer.zip here, unzip, and then run (this will install libs for the GUI
+Step 1. Download the 'Start Bitcoin Installer.zip (link below), unzip, and then run (this will install libs for the GUI
+https://github.com/bitlinc/Raspi_Node_Installer/raw/master/Start%20Bitcoin%20Installer.zip
 Step 2. After 'Start Bitcoin Installer' runs, it will delete it's self and download the Bitcoin Installer 
 Step 3. Run the 'Bitcoin Installer' application that is located on your desktop to install Bitcoin
 
 
 
 
-
+# 
 # STILL IN DEVELOPMENT
+#
 # What is this script and what does it do
 This script will setup a full Bitcoin Node for mainnet and testnet and setup Electrum Wallet to connect only to your node
     * All programs and services are configured to auto start when you boot or reboot the Pi - no input needed from user
