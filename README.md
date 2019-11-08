@@ -3,7 +3,7 @@
 # Bitcoin and Electrum Set to Auto Start On Boot
 # Mainnet & Testnet Run Simultaneously 
 
-#################################################################################################################
+#################################################################################################################################################################
 # MACOS BETA VERSION ONLY
 ***Compatible with macOS High Sierra and Catalina, Mojave has a weird bug in the GUI and some buttons won't load
 ***View all scipts in this repo --> https://github.com/bitlinc/Raspi_Node_Installer
