@@ -3,15 +3,36 @@
 # Bitcoin and Electrum Set to Auto Start On Boot
 # Mainnet & Testnet Run Simultaneously 
 
+#################################################################################################################
+# MACOS BETA VERSION ONLY
+***Compatible with macOS High Sierra and Catalina, Mojave has a weird bug in the GUI and some buttons won't load
+***View all scipts in this repo
+
+# Notices
+* after installing Bitcoin there will be shortcuts for mainnet and test created on your desktop, this is how you run Bitcoin
+* choose if you want to run your mainnet over the tor network, and ONLY connect to other tor bitcoin nodes or not
+* you can re-run the Bitcoin Installer script to change your configuration file from tor network to clearnet
+* the installer will NOT create a new Bitcoin directory if you have on located on your external drive
+* if you have a router with UPnP Bitcoin will check for it and set it's network up automatically
+* if your router doesn't have UPnP support manual setup instructions: https://bitcoin.org/en/full-node#network-configuration
+
+# Directions
+Step 1. Download the 'Start Bitcoin Installer.zip here, unzip, and then run (this will install libs for the GUI
+Step 2. After 'Start Bitcoin Installer' runs, it will delete it's self and download the Bitcoin Installer 
+Step 3. Run the 'Bitcoin Installer' application that is located on your desktop to install Bitcoin
+
+
+
+######################## THIS WILL BE ACTIVE SOON FOR NOW ONLY WORKING WITH macOS ###############################   
+
 
 # What is this script and what does it do
 This script will setup a full Bitcoin Node for mainnet and testnet and setup Electrum Wallet to connect only to your node
     * All programs and services are configured to auto start when you boot or reboot the Pi - no input needed from user
 
-
 # Who is this script for 
 This script is designed for the user that has little to no experence with the command line interface, Bitcoin or Raspberry Pi
-
+   
 # What you need
 1. Raspberry Pi version 3 or 4 (if you haven't bought a Pi yet, I would get the 4 GB Pi 4 version)
 2. Display for your Raspberry Pi, keyboard, MicroSD Card (32 GB minimum reccommended) and mouse
