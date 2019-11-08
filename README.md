@@ -25,7 +25,7 @@ Step 3. Run the 'Bitcoin Installer' application that is located on your desktop 
 
 
 
-# ########################################
+# STILL IN DEVELOPMENT
 # What is this script and what does it do
 This script will setup a full Bitcoin Node for mainnet and testnet and setup Electrum Wallet to connect only to your node
     * All programs and services are configured to auto start when you boot or reboot the Pi - no input needed from user
